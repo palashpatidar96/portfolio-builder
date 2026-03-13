@@ -204,7 +204,7 @@ export default function ChatBot({ username, personName }: ChatBotProps) {
                   className="flex-1 px-4 py-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-color)] text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-purple-500/50 transition-colors"
                 />
                 <button
-                  onClick={sendMessage}
+                  onClick={() => sendMessage()}
                   disabled={isLoading || !input.trim()}
                   className="w-10 h-10 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 text-white flex items-center justify-center hover:opacity-90 disabled:opacity-50 transition-opacity"
                 >

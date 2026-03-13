@@ -75,7 +75,7 @@ function extractLocation(text: string): string | null {
 function extractTitle(lines: string[], text: string): string {
   // Look for a professional title after the name
   const titlePatterns = [
-    /(?:PROFESSIONAL\s+SYNOPSIS|SUMMARY|OBJECTIVE|PROFILE)\s*\n?\s*(.+?)(?:\.|with|\n)/is,
+    /(?:PROFESSIONAL\s+SYNOPSIS|SUMMARY|OBJECTIVE|PROFILE)\s*\n?\s*(.+?)(?:\.|with|\n)/i,
   ];
   for (const p of titlePatterns) {
     const m = text.match(p);
