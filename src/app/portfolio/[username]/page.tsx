@@ -1,6 +1,7 @@
 import { getFullProfile } from "@/lib/database";
 import { getLocalProfile } from "@/lib/local-store";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import PortfolioClient from "./PortfolioClient";
 
 // Demo data for when no Supabase is configured
@@ -165,5 +166,9 @@ export default async function PortfolioPage({ params }: PageProps) {
     notFound();
   }
 
-  return <PortfolioClient data={data} />;
+  return (
+    <Suspense fallback={<div style={{ position: "fixed", inset: 0, background: "#0a0a0a" }} />}>
+      <PortfolioClient data={data} />
+    </Suspense>
+  );
 }
