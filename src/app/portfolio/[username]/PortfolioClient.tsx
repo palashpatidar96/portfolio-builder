@@ -1,10 +1,8 @@
 "use client";
 
-import HeroSection from "@/components/portfolio/HeroSection";
-import ExperienceSection from "@/components/portfolio/ExperienceSection";
-import EducationSection from "@/components/portfolio/EducationSection";
-import ProjectsSection from "@/components/portfolio/ProjectsSection";
-import SkillsSection from "@/components/portfolio/SkillsSection";
+import { useState, useEffect, useCallback } from "react";
+import dynamic from "next/dynamic";
+import { useSearchParams } from "next/navigation";
 import ChatBot from "@/components/chatbot/ChatBot";
 import type {
   UserProfile,
@@ -13,9 +11,24 @@ import type {
   Project,
   Skill,
 } from "@/types/portfolio";
-import { Sparkles } from "lucide-react";
-import Link from "next/link";
 
+/* ─── dynamic imports ─────────────────────────────────── */
+const Portfolio3DCanvas = dynamic(
+  () => import("./components/Portfolio3DCanvas"),
+  {
+    ssr: false,
+    loading: () => (
+      <div style={{ position: "fixed", inset: 0, background: "#000" }} />
+    ),
+  }
+);
+
+const PortfolioFlat = dynamic(
+  () => import("./components/PortfolioFlat"),
+  { ssr: false }
+);
+
+/* ─── types ───────────────────────────────────────────── */
 interface PortfolioClientProps {
   data: {
     profile: UserProfile;
@@ -26,63 +39,121 @@ interface PortfolioClientProps {
   };
 }
 
+/* ═══════════════════════════════════════════════════════ */
 export default function PortfolioClient({ data }: PortfolioClientProps) {
-  const { profile, experiences, education, projects, skills } = data;
+  const { profile, experiences, projects, skills, education } = data;
+  const searchParams = useSearchParams();
 
-  return (
-    <div className="min-h-screen bg-grid">
-      {/* Floating particles */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1.5 h-1.5 rounded-full bg-purple-500/20 animate-float"
-            style={{
-              left: `${10 + i * 12}%`,
-              top: `${15 + (i % 4) * 20}%`,
-              animationDelay: `${i * 0.7}s`,
-            }}
-          />
-        ))}
+  const [view, setView] = useState<"flat" | "3d">("flat");
+  const [isMobile, setIsMobile] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+    setIsMobile(window.innerWidth < 640);
+
+    // honour ?view=3d query param
+    if (searchParams.get("view") === "3d") setView("3d");
+
+    const onResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [searchParams]);
+
+  // ChatBot manages its own open state; this is a no-op trigger exposed to children
+  const handleOpenChat = useCallback(() => {}, []);
+
+  /* ── loading splash ─────────────────────────────────── */
+  if (!hydrated) {
+    return <div style={{ position: "fixed", inset: 0, background: "#000" }} />;
+  }
+
+  /* ── 3D view (desktop only) ─────────────────────────── */
+  if (view === "3d" && !isMobile) {
+    return (
+      <div style={{ position: "fixed", inset: 0, background: "#000" }}>
+        {/* back to flat button */}
+        <button
+          onClick={() => setView("flat")}
+          style={{
+            position: "fixed",
+            top: "1.5rem",
+            left: "1.5rem",
+            zIndex: 100,
+            background: "rgba(10,10,10,0.8)",
+            border: "1px solid rgba(232,197,71,0.3)",
+            color: "#e8c547",
+            padding: "0.5rem 1rem",
+            fontFamily: "var(--mono)",
+            fontSize: "0.75rem",
+            cursor: "pointer",
+            backdropFilter: "blur(8px)",
+            letterSpacing: "0.1em",
+            transition: "all 0.2s",
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.background = "rgba(232,197,71,0.1)")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.background = "rgba(10,10,10,0.8)")
+          }
+        >
+          ← Flat View
+        </button>
+
+        <Portfolio3DCanvas
+          profile={profile}
+          experiences={experiences}
+          projects={projects}
+          skills={skills}
+          education={education}
+          onOpenChat={handleOpenChat}
+        />
+
+        <ChatBot username={profile.username} personName={profile.full_name} />
       </div>
+    );
+  }
 
-      {/* Navbar */}
-      <nav className="fixed top-0 w-full z-40 border-b border-[var(--border-color)] bg-[var(--bg-primary)]/80 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-white" />
-            </div>
-            <span className="text-lg font-bold gradient-text">
-              PortfolioAI
-            </span>
-          </Link>
-          <span className="text-sm text-[var(--text-muted)]">
-            {profile.full_name}&apos;s Portfolio
-          </span>
-        </div>
-      </nav>
+  /* ── flat view (default + mobile fallback) ──────────── */
+  return (
+    <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
+      <PortfolioFlat data={data} onOpenChat={handleOpenChat} />
 
-      <main className="pt-14">
-        <HeroSection profile={profile} />
-        <ExperienceSection experiences={experiences} />
-        <SkillsSection skills={skills} />
-        <ProjectsSection projects={projects} />
-        <EducationSection education={education} />
-      </main>
+      {/* floating 3D toggle — desktop only */}
+      {!isMobile && (
+        <button
+          onClick={() => setView("3d")}
+          style={{
+            position: "fixed",
+            bottom: "6rem",
+            right: "1.5rem",
+            zIndex: 50,
+            background: "rgba(10,10,10,0.9)",
+            border: "1px solid rgba(232,197,71,0.4)",
+            color: "#e8c547",
+            padding: "0.6rem 1.2rem",
+            fontFamily: "var(--mono)",
+            fontSize: "0.7rem",
+            cursor: "pointer",
+            backdropFilter: "blur(8px)",
+            letterSpacing: "0.1em",
+            transition: "all 0.3s",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.background = "rgba(232,197,71,0.1)")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.background = "rgba(10,10,10,0.9)")
+          }
+        >
+          ⟐ 3D View
+        </button>
+      )}
 
-      {/* Footer */}
-      <footer className="py-8 px-6 border-t border-[var(--border-color)] text-center">
-        <p className="text-[var(--text-muted)] text-sm">
-          Built with{" "}
-          <Link href="/" className="gradient-text hover:underline">
-            PortfolioAI
-          </Link>{" "}
-          — Free & Open Source
-        </p>
-      </footer>
-
-      {/* Chatbot */}
       <ChatBot username={profile.username} personName={profile.full_name} />
     </div>
   );
