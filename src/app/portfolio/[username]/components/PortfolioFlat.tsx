@@ -141,8 +141,21 @@ export default function PortfolioFlat({ data, onOpenChat }: PortfolioFlatProps) 
         fontFamily: "var(--sans)",
         minHeight: "100vh",
       }}
-      className=""
     >
+      <style>{`
+        @media (max-width: 768px) {
+          .portfolio-nav-links { display: none !important; }
+          .portfolio-hero-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+          .portfolio-hero-right { display: none !important; }
+          .portfolio-about-grid { grid-template-columns: 1fr !important; }
+          .portfolio-exp-grid { grid-template-columns: 1fr !important; }
+          .portfolio-projects-grid { grid-template-columns: 1fr !important; }
+          .portfolio-skills-grid { grid-template-columns: 1fr !important; }
+          .portfolio-contact-grid { grid-template-columns: 1fr !important; }
+          .portfolio-edu-grid { grid-template-columns: 1fr !important; }
+          .portfolio-stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+      `}</style>
       {/* ════════════ NAVBAR ════════════ */}
       <nav
         style={{
@@ -175,8 +188,8 @@ export default function PortfolioFlat({ data, onOpenChat }: PortfolioFlatProps) 
           <span style={{ color: "var(--accent)" }}>port.</span><span style={{ color: "var(--text)" }}>folio</span>
         </a>
 
-        {/* nav links */}
-        <div style={{ display: "flex", gap: "2rem" }}>
+        {/* nav links — hidden on mobile */}
+        <div style={{ display: "flex", gap: "2rem" }} className="portfolio-nav-links">
           {(["About", "Projects", "Skills", "Contact"] as const).map((label) => (
             <a
               key={label}
@@ -233,6 +246,7 @@ export default function PortfolioFlat({ data, onOpenChat }: PortfolioFlatProps) 
         }}
       >
         <div
+          className="portfolio-hero-grid"
           style={{
             maxWidth: "72rem",
             margin: "0 auto",
@@ -399,7 +413,7 @@ export default function PortfolioFlat({ data, onOpenChat }: PortfolioFlatProps) 
           </div>
 
           {/* right: stats & skills card */}
-          <div style={{ flexShrink: 0, width: 340 }}>
+          <div className="portfolio-hero-right" style={{ flexShrink: 0, width: 340 }}>
             {/* initials + availability */}
             <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem" }}>
               <div
@@ -548,6 +562,7 @@ export default function PortfolioFlat({ data, onOpenChat }: PortfolioFlatProps) 
         }}
       >
         <div
+          className="portfolio-about-grid"
           style={{
             maxWidth: "72rem",
             margin: "0 auto",
@@ -861,6 +876,8 @@ export default function PortfolioFlat({ data, onOpenChat }: PortfolioFlatProps) 
                         border: `1px solid rgba(240,236,226,0.07)`,
                         borderRadius: "14px",
                         overflow: "hidden",
+                        display: "flex",
+                        flexDirection: "column",
                       }}
                     >
                       {/* gradient header */}
@@ -916,7 +933,7 @@ export default function PortfolioFlat({ data, onOpenChat }: PortfolioFlatProps) 
                         </span>
                       </div>
 
-                      <div style={{ padding: "1.25rem" }}>
+                      <div style={{ padding: "1.25rem", display: "flex", flexDirection: "column", flex: 1 }}>
                         <h3
                           style={{
                             fontFamily: "'Playfair Display', var(--serif), serif",
@@ -934,12 +951,13 @@ export default function PortfolioFlat({ data, onOpenChat }: PortfolioFlatProps) 
                             fontSize: "0.9rem",
                             lineHeight: 1.65,
                             marginBottom: "0.9rem",
+                            flex: 1,
                           }}
                         >
                           {(proj.description ?? "").slice(0, 100)}
                           {(proj.description?.length ?? 0) > 100 ? "…" : ""}
                         </p>
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem" }}>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem", marginTop: "auto" }}>
                           {proj.tech_stack?.slice(0, 4).map((t) => (
                             <span
                               key={t}
@@ -1312,6 +1330,7 @@ export default function PortfolioFlat({ data, onOpenChat }: PortfolioFlatProps) 
         }}
       >
         <div
+          className="portfolio-contact-grid"
           style={{
             maxWidth: "72rem",
             margin: "0 auto",
