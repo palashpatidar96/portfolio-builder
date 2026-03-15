@@ -289,17 +289,42 @@ function extractSkills(text: string): ResumeData["skills"] {
     }
   }
 
-  // Fallback: extract known tech keywords
+  // Fallback: extract known keywords across all domains
   if (skills.length === 0) {
     const techKeywords: Record<string, string> = {
+      // Programming
       Python: "Programming", JavaScript: "Programming", TypeScript: "Programming", Java: "Programming",
+      "C++": "Programming", "C#": "Programming", Go: "Programming", Rust: "Programming", PHP: "Programming",
+      // Frontend / Design
       React: "Frontend", "Next.js": "Frontend", Vue: "Frontend", Angular: "Frontend",
+      Figma: "Design", "Adobe XD": "Design", Photoshop: "Design", Illustrator: "Design",
+      Canva: "Design", InDesign: "Design", Sketch: "Design",
+      // Backend / DB
       "Node.js": "Backend", FastAPI: "Backend", Django: "Backend", Flask: "Backend",
       PostgreSQL: "Database", MongoDB: "Database", Redis: "Database", MySQL: "Database",
+      // DevOps / Cloud
       Docker: "DevOps", Kubernetes: "DevOps", AWS: "Cloud", Azure: "Cloud", GCP: "Cloud",
       Git: "Tools", "CI/CD": "DevOps", Terraform: "DevOps",
-      PyTorch: "AI/ML", TensorFlow: "AI/ML", LangChain: "AI/ML", "Hugging Face": "AI/ML",
-      PySpark: "Data Engineering", Databricks: "Data Engineering", Spark: "Data Engineering",
+      // AI/ML / Data
+      PyTorch: "AI/ML", TensorFlow: "AI/ML", LangChain: "AI/ML",
+      PySpark: "Data Engineering", Databricks: "Data Engineering", Tableau: "Analytics",
+      "Power BI": "Analytics", Excel: "Analytics", "Google Analytics": "Analytics",
+      // Marketing / Content
+      SEO: "Marketing", SEM: "Marketing", HubSpot: "Marketing", Salesforce: "Marketing",
+      Mailchimp: "Marketing", "Google Ads": "Marketing", "Facebook Ads": "Marketing",
+      WordPress: "Content", Contentful: "Content",
+      // Business / Finance
+      "Financial Modeling": "Finance", Budgeting: "Finance", Forecasting: "Finance",
+      "P&L": "Finance", "PowerPoint": "Tools & Software", "Microsoft Office": "Tools & Software",
+      "Google Workspace": "Tools & Software", Notion: "Tools & Software", Jira: "Tools & Software",
+      Confluence: "Tools & Software", Slack: "Tools & Software", Asana: "Tools & Software",
+      Trello: "Tools & Software", Zoom: "Tools & Software",
+      // Leadership / PM
+      "Project Management": "Leadership", "Product Management": "Leadership",
+      Agile: "Leadership", Scrum: "Leadership", "Stakeholder Management": "Leadership",
+      // Communication
+      "Public Speaking": "Communication", "Content Writing": "Communication",
+      Copywriting: "Communication", "Technical Writing": "Communication",
     };
 
     for (const [tech, cat] of Object.entries(techKeywords)) {
@@ -314,21 +339,36 @@ function extractSkills(text: string): ResumeData["skills"] {
     }
   }
 
-  return skills.slice(0, 25);
+  return skills.slice(0, 40);
 }
 
 function mapCategory(raw: string): string {
   const lower = raw.toLowerCase();
-  if (lower.includes("ai") || lower.includes("llm") || lower.includes("ml") || lower.includes("generative")) return "AI & LLMOps";
-  if (lower.includes("cloud") || lower.includes("devops")) return "Cloud & DevOps";
-  if (lower.includes("data") && lower.includes("engineer")) return "Data Engineering";
-  if (lower.includes("program")) return "Programming";
-  if (lower.includes("front")) return "Frontend";
-  if (lower.includes("back")) return "Backend";
-  if (lower.includes("database") || lower.includes("data")) return "Database";
-  if (lower.includes("observ") || lower.includes("security")) return "Observability";
-  if (lower.includes("leader") || lower.includes("soft")) return "Leadership";
-  return raw.length > 25 ? raw.slice(0, 25) : raw;
+  // Technical
+  if (lower.includes("ai") || lower.includes("llm") || lower.includes("ml") || lower.includes("machine learning") || lower.includes("generative")) return "AI & ML";
+  if (lower.includes("cloud") || lower.includes("devops") || lower.includes("infra")) return "Cloud & DevOps";
+  if (lower.includes("data engineer") || lower.includes("big data") || lower.includes("pipeline")) return "Data Engineering";
+  if (lower.includes("program") || lower.includes("coding") || lower.includes("development")) return "Programming";
+  if (lower.includes("front") || lower.includes("ui") || lower.includes("ux")) return "Frontend & Design";
+  if (lower.includes("back") || lower.includes("api") || lower.includes("server")) return "Backend";
+  if (lower.includes("database") || lower.includes("sql") || lower.includes("nosql")) return "Database";
+  if (lower.includes("security") || lower.includes("observ") || lower.includes("monitor")) return "Security & Ops";
+  // Business / Non-technical
+  if (lower.includes("market") || lower.includes("brand") || lower.includes("advertis") || lower.includes("seo") || lower.includes("campaign")) return "Marketing";
+  if (lower.includes("analytic") || lower.includes("reporting") || lower.includes("insight") || lower.includes("tableau") || lower.includes("excel")) return "Analytics";
+  if (lower.includes("financ") || lower.includes("account") || lower.includes("budget") || lower.includes("invest")) return "Finance";
+  if (lower.includes("content") || lower.includes("writ") || lower.includes("copy") || lower.includes("blog") || lower.includes("editorial")) return "Content & Writing";
+  if (lower.includes("design") || lower.includes("figma") || lower.includes("canva") || lower.includes("photo") || lower.includes("illustrat")) return "Design";
+  if (lower.includes("sales") || lower.includes("crm") || lower.includes("hubspot") || lower.includes("salesforce")) return "Sales & CRM";
+  if (lower.includes("project") || lower.includes("product") || lower.includes("agile") || lower.includes("scrum") || lower.includes("ops")) return "Product & Project Mgmt";
+  if (lower.includes("leader") || lower.includes("manage") || lower.includes("strateg") || lower.includes("execut")) return "Leadership";
+  if (lower.includes("communicat") || lower.includes("present") || lower.includes("speak") || lower.includes("negotiat")) return "Communication";
+  if (lower.includes("tool") || lower.includes("software") || lower.includes("platform") || lower.includes("suite") || lower.includes("microsoft") || lower.includes("google")) return "Tools & Software";
+  if (lower.includes("language") || lower.includes("lingual") || lower.includes("translat")) return "Languages";
+  if (lower.includes("legal") || lower.includes("compliance") || lower.includes("regulat")) return "Legal & Compliance";
+  if (lower.includes("hr") || lower.includes("recruit") || lower.includes("talent") || lower.includes("people")) return "HR & People";
+  if (lower.includes("research") || lower.includes("academic") || lower.includes("publish")) return "Research";
+  return raw.length > 30 ? raw.slice(0, 30) : raw;
 }
 
 function estimateProficiency(skill: string, fullText: string): number {

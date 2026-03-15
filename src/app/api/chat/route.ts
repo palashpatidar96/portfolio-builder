@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateChatResponse } from "@/lib/huggingface";
 import { buildChatContext } from "@/lib/database";
 
 export async function POST(request: NextRequest) {
@@ -35,11 +34,15 @@ Tone examples:
 - GOOD: "React and TypeScript are basically my home turf — been using them daily for years."`;
 
 
-    const response = await generateChatResponse(
-      systemPrompt,
-      message,
-      context
-    );
+    let response: string;
+    const groqKey = process.env.GROQ_API_KEY;
+    if (groqKey) {
+      const { generateChatResponseWithGroq } = await import("@/lib/groq");
+      response = await generateChatResponseWithGroq(systemPrompt, message, context);
+    } else {
+      const { generateChatResponse } = await import("@/lib/huggingface");
+      response = await generateChatResponse(systemPrompt, message, context);
+    }
 
     return NextResponse.json({ response });
   } catch (error) {

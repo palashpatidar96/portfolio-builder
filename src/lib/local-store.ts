@@ -35,6 +35,7 @@ export async function saveProfile(username: string, data: ResumeData) {
         linkedin_url: data.linkedin_url || null,
         github_url: data.github_url || null,
         website_url: data.website_url || null,
+        tagline: data.tagline || null,
       })
       .select()
       .single();
@@ -81,6 +82,7 @@ export async function saveProfile(username: string, data: ResumeData) {
     linkedin_url: data.linkedin_url,
     github_url: data.github_url,
     website_url: data.website_url,
+    tagline: data.tagline,
     created_at: now,
     updated_at: now,
   };

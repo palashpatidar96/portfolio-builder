@@ -15,6 +15,7 @@ CREATE TABLE profiles (
   linkedin_url TEXT,
   github_url TEXT,
   website_url TEXT,
+  tagline TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

@@ -11,6 +11,7 @@ export interface UserProfile {
   linkedin_url?: string;
   github_url?: string;
   website_url?: string;
+  tagline?: string;
   created_at: string;
   updated_at: string;
 }
@@ -71,6 +72,7 @@ export interface ResumeData {
   linkedin_url?: string;
   github_url?: string;
   website_url?: string;
+  tagline?: string;
   experiences: Omit<Experience, "id" | "user_id">[];
   education: Omit<Education, "id" | "user_id">[];
   projects: Omit<Project, "id" | "user_id">[];

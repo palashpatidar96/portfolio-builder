@@ -59,14 +59,6 @@ function extractYear(dateStr: string | undefined | null): number {
   return m ? parseInt(m[0]) : NaN;
 }
 
-const QUOTES = [
-  { text: "The best error message is the one that never shows up.", author: "Thomas Fuchs" },
-  { text: "It works on my machine. Ship the machine.", author: "Unknown Dev" },
-  { text: "First, solve the problem. Then, write the code.", author: "John Johnson" },
-  { text: "Code is like humor. When you have to explain it, it's bad.", author: "Cory House" },
-  { text: "The most disastrous thing you can ever learn is your first programming language.", author: "Alan Kay" },
-  { text: "Any fool can write code a computer understands. Good programmers write code humans understand.", author: "Martin Fowler" },
-];
 
 /* ─── types ───────────────────────────────────────────── */
 interface PortfolioFlatProps {
@@ -317,27 +309,21 @@ export default function PortfolioFlat({ data, onOpenChat }: PortfolioFlatProps) 
                 : profile.summary}
             </p>
 
-            {/* quote */}
-            {(() => {
-              const q = QUOTES[profile.full_name.charCodeAt(0) % QUOTES.length];
-              return (
-                <div
-                  style={{
-                    borderLeft: "2px solid var(--accent)",
-                    paddingLeft: "1rem",
-                    marginBottom: "2rem",
-                    opacity: 0.8,
-                  }}
-                >
-                  <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: "0.9rem", color: "var(--text)", lineHeight: 1.6, marginBottom: "0.3rem" }}>
-                    &ldquo;{q.text}&rdquo;
-                  </p>
-                  <p style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--accent)", letterSpacing: "0.1em" }}>
-                    — {q.author}
-                  </p>
-                </div>
-              );
-            })()}
+            {/* tagline */}
+            {profile.tagline && (
+              <div
+                style={{
+                  borderLeft: "2px solid var(--accent)",
+                  paddingLeft: "1rem",
+                  marginBottom: "2rem",
+                  opacity: 0.85,
+                }}
+              >
+                <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: "0.95rem", color: "var(--text)", lineHeight: 1.6 }}>
+                  &ldquo;{profile.tagline}&rdquo;
+                </p>
+              </div>
+            )}
 
             {/* CTAs */}
             <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginBottom: "2rem" }}>
@@ -1457,8 +1443,7 @@ export default function PortfolioFlat({ data, onOpenChat }: PortfolioFlatProps) 
                 marginBottom: "2rem",
               }}
             >
-              &ldquo;The best portfolios are built at the intersection of design and
-              engineering.&rdquo;
+              &ldquo;{profile.tagline || "The best portfolios are built at the intersection of passion and execution."}&rdquo;
             </p>
             <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
               <div
