@@ -613,21 +613,21 @@ export default function OnboardingPage() {
                   View Your Portfolio <ArrowRight size={15} />
                 </a>
                 <a
-                  href={`${portfolioUrl}?view=3d`}
+                  href="/ats-optimizer"
                   style={{
                     display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem",
                     padding: "0.9rem 1.5rem",
                     background: "transparent",
-                    border: "1px solid rgba(240,236,226,0.15)",
-                    color: "var(--text)",
+                    border: "1px solid rgba(232,197,71,0.35)",
+                    color: "var(--accent)",
                     fontFamily: "var(--sans)", fontWeight: 500, fontSize: "0.8rem",
                     letterSpacing: "0.08em", textTransform: "uppercase",
                     textDecoration: "none", transition: "all 0.2s ease", borderRadius: 8,
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.color = "var(--accent)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(240,236,226,0.15)"; e.currentTarget.style.color = "var(--text)"; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(232,197,71,0.08)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
                 >
-                  <ExternalLink size={14} /> Switch to 3D View
+                  <ExternalLink size={14} /> Optimize for ATS
                 </a>
               </div>
 

@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  serverExternalPackages: ["pdf-parse"],
+  serverExternalPackages: ["pdf-parse", "pdfkit", "docx"],
   webpack: (config) => {
     // Handle .glb and .gltf 3D model files
     config.module.rules.push({

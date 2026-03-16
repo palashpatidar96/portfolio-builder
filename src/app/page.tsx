@@ -17,11 +17,17 @@ export default function HomePage() {
     const observer = new IntersectionObserver(
       (entries) =>
         entries.forEach((e) => {
-          if (e.isIntersecting) e.target.classList.add("visible");
+          if (e.isIntersecting) {
+            e.target.classList.remove("pending");
+            e.target.classList.add("visible");
+          }
         }),
       { threshold: 0.1 }
     );
-    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    document.querySelectorAll(".reveal").forEach((el) => {
+      el.classList.add("pending");
+      observer.observe(el);
+    });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -125,7 +131,8 @@ export default function HomePage() {
         .section-label { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); letter-spacing: 0.08em; margin-bottom: 16px; display: block; }
         .section-h2 { font-family: var(--serif); font-size: clamp(2rem, 3.5vw, 2.875rem); font-weight: 700; line-height: 1.12; letter-spacing: -0.025em; margin-bottom: 56px; }
         .section-h2 em { font-style: italic; color: var(--accent); }
-        .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s cubic-bezier(0.4,0,0.2,1), transform 0.65s cubic-bezier(0.4,0,0.2,1); }
+        .reveal { opacity: 1; transform: translateY(0); transition: opacity 0.65s cubic-bezier(0.4,0,0.2,1), transform 0.65s cubic-bezier(0.4,0,0.2,1); }
+        .reveal.pending { opacity: 0; transform: translateY(28px); }
         .reveal.visible { opacity: 1; transform: translateY(0); }
         .reveal-d1 { transition-delay: 0.1s; }
         .reveal-d2 { transition-delay: 0.2s; }
@@ -143,7 +150,7 @@ export default function HomePage() {
         .step-desc { font-size: 0.9375rem; color: var(--text-muted); line-height: 1.65; }
 
         /* FEATURES */
-        .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
         .feature-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-lg); padding: 36px; position: relative; overflow: hidden; transition: all var(--transition); cursor: default; }
         .feature-card:hover { background: var(--bg-card-hover); border-color: rgba(232,197,71,0.2); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.35); }
         .feature-num { font-family: var(--mono); font-size: 0.6875rem; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 14px; }
@@ -217,6 +224,49 @@ export default function HomePage() {
           .hero-ctas { flex-direction: column; align-items: flex-start; }
           .nav-inner { padding: 0 20px; }
         }
+
+        /* HERO ATS SEPARATOR + CTA ROW */
+        .hero-sep { display: flex; align-items: center; gap: 12px; margin: 8px 0 16px; }
+        .hero-sep-line { height: 1px; background: rgba(255,255,255,0.1); flex: 1; max-width: 48px; }
+        .hero-sep-label { font-family: var(--mono); font-size: 0.625rem; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
+
+        /* ATS FEATURE CARD (inside features grid) */
+        .feature-card-ats { border-color: rgba(232,197,71,0.2) !important; }
+        .feature-card-ats:hover { border-color: rgba(232,197,71,0.4) !important; box-shadow: 0 16px 40px rgba(0,0,0,0.35), 0 0 0 1px rgba(232,197,71,0.12); }
+        .ats-score-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .ats-score-pill { background: rgba(232,197,71,0.06); border: 1px solid rgba(232,197,71,0.14); border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; }
+        .ats-score-pill-name { font-family: var(--mono); font-size: 0.5625rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+        .ats-score-pill-val { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); font-weight: 700; }
+
+        /* ATS SECTION */
+        .ats-section { background: linear-gradient(180deg, var(--bg) 0%, rgba(232,197,71,0.025) 50%, var(--bg) 100%); }
+        .ats-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+        .ats-sub { font-size: 0.9375rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 32px; max-width: 460px; }
+        .ats-features { list-style: none; margin-bottom: 36px; display: flex; flex-direction: column; gap: 14px; }
+        .ats-features li { display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem; color: var(--text-muted); line-height: 1.5; }
+        .ats-features li .ats-check { color: var(--accent); font-size: 1rem; margin-top: 1px; flex-shrink: 0; }
+        .ats-features li strong { color: var(--text); }
+        .ats-mockup { position: relative; }
+        .ats-panel { background: var(--bg-card); border: 1px solid rgba(232,197,71,0.2); border-radius: var(--radius-lg); padding: 24px; box-shadow: 0 32px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(232,197,71,0.06); }
+        .ats-panel-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+        .ats-panel-title { font-family: var(--mono); font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+        .ats-overall-badge { background: rgba(232,197,71,0.1); border: 1px solid rgba(232,197,71,0.3); border-radius: 100px; padding: 4px 12px; font-family: var(--mono); font-size: 0.75rem; color: var(--accent); font-weight: 600; }
+        .ats-gauge-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 16px; }
+        .ats-gauge-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 14px 10px; text-align: center; transition: border-color var(--transition); }
+        .ats-gauge-card:hover { border-color: rgba(232,197,71,0.25); }
+        .ats-gauge-svg { width: 64px; height: 64px; margin: 0 auto 6px; }
+        .ats-gauge-name { font-family: var(--mono); font-size: 0.5625rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
+        .ats-float-badge { position: absolute; top: -16px; right: -16px; background: rgba(232,197,71,0.1); border: 1px solid rgba(232,197,71,0.35); border-radius: 8px; padding: 8px 14px; font-family: var(--mono); font-size: 0.6875rem; color: var(--accent); white-space: nowrap; backdrop-filter: blur(10px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); animation: float 5s ease-in-out infinite; }
+        .ats-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 20px 0; }
+        .ats-optimized-row { display: flex; align-items: center; justify-content: space-between; }
+        .ats-opt-label { font-family: var(--mono); font-size: 0.625rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+        .ats-opt-bar { flex: 1; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; margin: 0 12px; overflow: hidden; }
+        .ats-opt-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #f0d060); border-radius: 2px; }
+        .ats-opt-pct { font-family: var(--mono); font-size: 0.75rem; font-weight: 600; color: var(--accent); min-width: 36px; text-align: right; }
+        @media (max-width: 900px) {
+          .ats-inner { grid-template-columns: 1fr; gap: 48px; }
+          .ats-score-grid { grid-template-columns: repeat(2, 1fr); }
+        }
       `}</style>
 
       <div style={{ background: "var(--bg)", color: "var(--text)", minHeight: "100vh" }}>
@@ -228,10 +278,11 @@ export default function HomePage() {
             <ul className="nav-links">
               <li><a href="#features">Features</a></li>
               <li><a href="#how-it-works">How It Works</a></li>
-              <li><Link href="/portfolio/demo" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: "0.875rem", fontWeight: 500 }}>Examples</Link></li>
+              <li><Link href="/ats-optimizer" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: "0.875rem", fontWeight: 500 }}>ATS Optimizer</Link></li>
             </ul>
             <div className="nav-actions">
-              <Link href="/portfolio/demo" className="btn-ghost">View Demo</Link>
+              <Link href="/ats-optimizer" className="btn-ghost" style={{ color: "var(--accent)" }}>ATS Optimizer</Link>
+              <Link href="/onboarding" className="btn-gold" style={{ fontSize: "0.875rem", padding: "9px 18px" }}>Get Started</Link>
             </div>
           </div>
         </nav>
@@ -244,15 +295,20 @@ export default function HomePage() {
               <div className="hero-badge">✓ Free &amp; Open Source</div>
               <h1 className="hero-h1">
                 Your Resume,<br />
-                <span className="line-italic">Your Portfolio</span><br />
-                In Seconds.
+                <span className="line-italic">Your Portfolio,</span><br />
+                Your ATS Score.
               </h1>
               <p className="hero-sub">
-                Upload your PDF resume. Get a stunning editorial portfolio with an AI chatbot — instantly, for free.
+                Upload your PDF resume. Get a stunning editorial portfolio with an AI chatbot — plus score and optimize your resume against 6 ATS platforms, instantly and for free.
               </p>
-              <div className="hero-ctas">
-                <Link href="/onboarding" className="btn-gold-lg">Upload Resume →</Link>
-                <Link href="/portfolio/demo" className="btn-outline-lg">See Live Demo</Link>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28 }}>
+                <div className="hero-ctas" style={{ gap: 10 }}>
+                  <Link href="/onboarding" className="btn-gold-lg">Upload Resume →</Link>
+                  <Link href="/portfolio/demo" className="btn-outline-lg">See Live Demo</Link>
+                </div>
+                <div className="hero-ctas" style={{ gap: 10 }}>
+                  <Link href="/ats-optimizer" className="btn-gold-lg">Optimize for ATS →</Link>
+                </div>
               </div>
               <div className="trust-chips">
                 <span className="trust-chip"><span className="check">✓</span> No signup required</span>
@@ -264,7 +320,7 @@ export default function HomePage() {
             <div className="hero-right">
               <div className="mockup-wrapper">
                 <div className="float-badge float-badge-teal">✓ AI Extracted</div>
-                <div className="float-badge float-badge-gold">⊙ 3D View Ready</div>
+                <div className="float-badge float-badge-gold">⚡ ATS Optimized</div>
                 <div className="float-badge float-badge-coral">★ Shareable Link</div>
                 <div className="mockup-card">
                   <div className="mockup-topbar">
@@ -369,20 +425,8 @@ export default function HomePage() {
                   <div className="chat-bubble them">Any open source contributions?</div>
                 </div>
               </div>
-              <div className="feature-card reveal reveal-d1">
-                <div className="feature-num">03</div>
-                <div className="feature-title">3D Immersive View</div>
-                <p className="feature-desc">Optional cyberpunk 3D scene — the same portfolio, a different dimension entirely. Toggle with one click.</p>
-                <div className="three-d-visual feat-visual">
-                  <div className="three-d-badge">3D</div>
-                  <div>
-                    <div className="three-d-label">Powered by Three.js</div>
-                    <div className="three-d-btn">Switch to 3D ⊙</div>
-                  </div>
-                </div>
-              </div>
               <div className="feature-card reveal reveal-d2">
-                <div className="feature-num">04</div>
+                <div className="feature-num">03</div>
                 <div className="feature-title">Shareable URL</div>
                 <p className="feature-desc">Get portfolioai.app/your-name — share with recruiters, copy to clipboard, always live and up-to-date.</p>
                 <div className="feat-visual">
@@ -392,7 +436,113 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
+              <div className="feature-card feature-card-ats reveal reveal-d1" style={{ gridColumn: "1 / -1" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 32, flexWrap: "wrap" }}>
+                  <div style={{ flex: "1", minWidth: 240 }}>
+                    <div className="feature-num">05 — ATS OPTIMIZER</div>
+                    <div className="feature-title">Beat Every ATS Filter</div>
+                    <p className="feature-desc" style={{ maxWidth: 480 }}>Paste a job description and upload your resume. Our AI scores it across 6 real ATS platforms, rewrites your bullets with missing keywords, and exports a submission-ready .docx or .pdf in seconds.</p>
+                    <Link href="/ats-optimizer" style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(232,197,71,0.1)", border: "1px solid rgba(232,197,71,0.3)", borderRadius: 8, padding: "8px 16px", fontFamily: "var(--mono)", fontSize: "0.75rem", color: "var(--accent)", textDecoration: "none", transition: "all var(--transition)", fontWeight: 600 }}>
+                      Try ATS Optimizer →
+                    </Link>
+                  </div>
+                  <div style={{ flex: "1", minWidth: 280 }}>
+                    <div style={{ fontFamily: "var(--mono)", fontSize: "0.5625rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>Live Score Preview</div>
+                    <div className="ats-score-grid">
+                      {[["Workday", 92], ["Taleo", 92], ["iCIMS", 94], ["Greenhouse", 96], ["Lever", 96], ["SuccessFactors", 96]].map(([name, score]) => (
+                        <div key={name} className="ats-score-pill">
+                          <span className="ats-score-pill-name">{name}</span>
+                          <span className="ats-score-pill-val">{score}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+        </section>
+
+        {/* ATS OPTIMIZER SHOWCASE */}
+        <section className="section ats-section" id="ats-optimizer">
+          <div className="section-inner">
+          <div className="ats-inner">
+            <div className="ats-copy reveal">
+              <span className="section-label">// ATS Resume Optimizer</span>
+              <h2 className="section-h2" style={{ marginBottom: 20 }}>
+                Beat Every ATS.<br />
+                Land <em>More Interviews.</em>
+              </h2>
+              <p className="ats-sub">
+                Upload your resume + paste a job description. Our AI optimizes your resume for 6 real ATS platforms — Workday, Taleo, iCIMS, Greenhouse, Lever &amp; SuccessFactors — and generates a ready-to-submit .docx or .pdf.
+              </p>
+              <ul className="ats-features">
+                <li><span className="ats-check">✓</span><span><strong>6-Platform ATS Scoring</strong> — real keyword matching strategies per platform</span></li>
+                <li><span className="ats-check">✓</span><span><strong>AI Resume Rewrite</strong> — Groq LLM rewrites bullets to include missing keywords naturally</span></li>
+                <li><span className="ats-check">✓</span><span><strong>Semantic Matching</strong> — finds synonyms and related skills you already have</span></li>
+                <li><span className="ats-check">✓</span><span><strong>Download Instantly</strong> — ATS-optimized .docx and .pdf, ready to submit</span></li>
+              </ul>
+              <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+                <Link href="/ats-optimizer" className="btn-gold-lg">Optimize My Resume →</Link>
+                <Link href="/ats-optimizer" className="btn-outline-lg">See ATS Scores</Link>
+              </div>
+            </div>
+
+            <div className="ats-mockup reveal reveal-d2">
+              <div className="ats-float-badge">⚡ AI Optimized — 94% avg score</div>
+              <div className="ats-panel">
+                <div className="ats-panel-top">
+                  <span className="ats-panel-title">ATS Score Dashboard</span>
+                  <span className="ats-overall-badge">Overall 94%</span>
+                </div>
+                <div className="ats-gauge-grid">
+                  {[
+                    { name: "Workday", score: 92, r: 24 },
+                    { name: "Taleo", score: 92, r: 24 },
+                    { name: "iCIMS", score: 94, r: 24 },
+                    { name: "Greenhouse", score: 96, r: 24 },
+                    { name: "Lever", score: 96, r: 24 },
+                    { name: "SuccessFactors", score: 96, r: 24 },
+                  ].map(({ name, score, r }) => {
+                    const circ = 2 * Math.PI * r;
+                    const dash = (score / 100) * circ;
+                    return (
+                      <div key={name} className="ats-gauge-card">
+                        <svg className="ats-gauge-svg" viewBox="0 0 64 64">
+                          <circle cx="32" cy="32" r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="4" />
+                          <circle
+                            cx="32" cy="32" r={r}
+                            fill="none"
+                            stroke="#e8c547"
+                            strokeWidth="4"
+                            strokeLinecap="round"
+                            strokeDasharray={`${dash} ${circ}`}
+                            transform="rotate(-90 32 32)"
+                          />
+                          <text x="32" y="36" textAnchor="middle" fontSize="11" fontWeight="700" fill="#e8c547" fontFamily="monospace">{score}%</text>
+                        </svg>
+                        <div className="ats-gauge-name">{name}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="ats-divider" />
+                {[
+                  { label: "Keywords", pct: 96 },
+                  { label: "Formatting", pct: 91 },
+                  { label: "Experience", pct: 93 },
+                ].map(({ label, pct }) => (
+                  <div key={label} className="ats-optimized-row" style={{ marginBottom: 10 }}>
+                    <span className="ats-opt-label">{label}</span>
+                    <div className="ats-opt-bar">
+                      <div className="ats-opt-fill" style={{ width: `${pct}%` }} />
+                    </div>
+                    <span className="ats-opt-pct">{pct}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
           </div>
         </section>
 
@@ -408,7 +558,7 @@ export default function HomePage() {
                 <div className="stat-chip">MIT License</div>
               </div>
               <div className="proof-actions">
-                <a href="https://github.com/palashpatidar96/portfolio-builder" target="_blank" rel="noopener noreferrer" className="btn-outline">View on GitHub</a>
+                <Link href="/ats-optimizer" className="btn-outline">Try ATS Optimizer</Link>
                 <Link href="/onboarding" className="btn-gold">Build My Portfolio →</Link>
               </div>
             </div>
@@ -440,6 +590,7 @@ export default function HomePage() {
               <ul className="footer-links">
                 <li><Link href="/">Home</Link></li>
                 <li><a href="#features">Features</a></li>
+                <li><Link href="/ats-optimizer">ATS Optimizer</Link></li>
                 <li><Link href="/portfolio/demo">Demo</Link></li>
                 <li><a href="https://github.com/palashpatidar96/portfolio-builder" target="_blank" rel="noopener noreferrer">GitHub</a></li>
               </ul>
